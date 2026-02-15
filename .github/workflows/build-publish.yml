@@ -1,4 +1,4 @@
-name: Build and Publish Distroless falco
+name: Build and Publish falco
 
 on:
   push:

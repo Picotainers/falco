@@ -1,5 +1,5 @@
 # falco
-Small, distroless-when-possible container for `falco`.
+Small compatibility-focused container for `falco`.
 
 ## how to use
 ```bash
