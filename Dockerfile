@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /build
 RUN git clone --depth 1 --branch v${FALCO_VERSION} https://github.com/smithlabcode/falco.git
 WORKDIR /build/falco
-RUN make
+RUN make CXXFLAGS="-O2 -std=c++14"
 
 FROM ubuntu:22.04
 
