@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     zlib1g \
   && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /build/falco/bin/falco /usr/local/bin/falco
+COPY --from=builder /build/falco/src/falco /usr/local/bin/falco
 
 WORKDIR /data
 ENTRYPOINT ["falco"]
