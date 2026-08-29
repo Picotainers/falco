@@ -1,31 +1,32 @@
+# syntax=docker/dockerfile:1
+
 FROM ubuntu:22.04 AS builder
 
 ARG DEBIAN_FRONTEND=noninteractive
-ARG FALCO_VERSION=1.2.5
+ARG FALCO_VERSION=v2.0.0
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
-    g++ \
-    gcc \
-    git \
-    make \
-    zlib1g-dev \
-  && rm -rf /var/lib/apt/lists/*
+    curl \
+    tar \
+    && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /build
-RUN git clone --depth 1 --branch v${FALCO_VERSION} https://github.com/smithlabcode/falco.git
-WORKDIR /build/falco
-RUN make CXXFLAGS="-O2 -std=c++17"
+WORKDIR /tmp
+RUN curl -fsSL -o falco.tar.gz "https://github.com/smithlabcode/falco/releases/download/${FALCO_VERSION}/falco-${FALCO_VERSION#v}-Linux.tar.gz" \
+    && tar -xzf falco.tar.gz \
+    && mv "falco-${FALCO_VERSION#v}-Linux" /opt/falco
 
 FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
-    zlib1g \
-  && rm -rf /var/lib/apt/lists/*
+    libstdc++6 \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /build/falco/src/falco /usr/local/bin/falco
+COPY --from=builder /opt/falco /opt/falco
+ENV PATH="/opt/falco/bin:${PATH}"
 
 WORKDIR /data
 ENTRYPOINT ["falco"]
+CMD ["--help"]
