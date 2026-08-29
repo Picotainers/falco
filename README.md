@@ -21,3 +21,13 @@ docker run --rm -v "$(pwd):/data" -w /data docker.io/picotainers/falco:latest -o
 ```bash
 docker build -t docker.io/picotainers/falco:latest .
 ```
+
+## Quick Usage
+
+```bash
+# Pull the image
+docker pull docker.io/picotainers/falcoatest
+
+# Run the tool
+docker run --rm docker.io/picotainers/falcoatest falco --help
+```
